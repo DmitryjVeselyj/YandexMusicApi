@@ -1,5 +1,4 @@
 #include "track.h"
-#include "errors.h"
 #include "request.h"
 #include <boost/property_tree/detail/file_parser_error.hpp>
 #include <boost/property_tree/ptree.hpp>

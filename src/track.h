@@ -2,6 +2,7 @@
 #define TRACK_H
 #include "client.h"
 #include "types.h"
+#include "errors.h"
 
 class Track {
 private:
