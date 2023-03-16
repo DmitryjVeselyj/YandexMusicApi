@@ -1,4 +1,5 @@
 #include "client.h"
+
 #include <iostream>
 
 const string BASE_API_URL = "https://api.music.yandex.net";

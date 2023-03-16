@@ -25,4 +25,10 @@ class BitrateError : public APIException {
 public:
     explicit BitrateError(const string &err = "Invalid Bitrate") : APIException(err){};
 };
+
+class PathError : public APIException {
+public:
+    explicit PathError(const string &err = "Invalid Path") : APIException(err){};
+};
+
 #endif // ERRORS_H

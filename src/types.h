@@ -8,6 +8,7 @@
 #include <vector>
 
 using string = std::string;
+
 using json = nlohmann::json;
 using json_list = std::vector<json>;
 using future_json = cpr::AsyncWrapper<json, false>;

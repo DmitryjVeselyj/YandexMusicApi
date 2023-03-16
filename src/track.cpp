@@ -51,6 +51,10 @@ void Track::download(string filename, string codec, int bitrate) {
             cpr::Response result = Request::Get(buildDirectLink(downloadInfoUrl), client.getRequest().getHeaders());
 
             std::ofstream track(filename, std::ofstream::binary);
+            if(!track.is_open()){
+                
+                throw PathError();
+            }
             track << result.text;
             track.close();
             return;
