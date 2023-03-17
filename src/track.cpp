@@ -7,16 +7,6 @@
 #include <fstream>
 #include <iostream>
 #include <typeinfo>
-extern const string BASE_API_URL;
-extern const string TOKEN;
-
-int Track::getTrackId() const {
-    return trackId;
-}
-
-void Track::setTrackId(int newTrackId) {
-    trackId = newTrackId;
-}
 
 Track::Track(const Client &client) {
     this->client = client;
@@ -51,8 +41,8 @@ void Track::download(string filename, string codec, int bitrate) {
             cpr::Response result = Request::Get(buildDirectLink(downloadInfoUrl), client.getRequest().getHeaders());
 
             std::ofstream track(filename, std::ofstream::binary);
-            if(!track.is_open()){
-                
+            if (!track.is_open()) {
+
                 throw PathError();
             }
             track << result.text;
@@ -77,4 +67,15 @@ cpr::Url Track::buildDirectLink(cpr::Url downloadInfoUrl) {
     string directLink = "https://" + host + "/get-mp3/" + sign + "/" + ts + path;
 
     return cpr::Url(directLink);
+}
+constexpr auto Track::getProperties() {
+    return makePropertiesTuple(Property<Track, int>{&Track::trackId, "id", simpleType::INT}, 
+                               Property<Track, int>{&Track::albumId, "albumId", simpleType::INT}, 
+                               Property<Track, string>{&Track::timestamp, "timestamp", simpleType::STRING});
+}
+json Track::TOJSON(){
+    return toJson(getProperties());
+}
+Track::Track(const json &data) {
+    deJson(data, getProperties());
 }
