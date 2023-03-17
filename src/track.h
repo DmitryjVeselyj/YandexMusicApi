@@ -4,14 +4,15 @@
 #include "types.h"
 #include "errors.h"
 #include "jsonSerDer.h"
-
+#include <fstream>
+#include <iostream>
 class Track : public AddJsonSerDer<Track> {
 private:
     
     Client client;
     
     cpr::Url buildDirectLink(cpr::Url downloadInfoUrl);
-
+    constexpr static auto getProperties();
 public:
     int trackId;
     int albumId;
@@ -20,16 +21,15 @@ public:
     json fullInfo;
     json downloadInfo;
     Track(const Client &client);
-    Track(const json& data);
+    Track(const Client &client, const json& data);
     Track(const Client &client, int trackId);
     json getFullInfo();
     json getDownloadInfo();
     void download(string filename, string codec = "mp3", int bitrate = 320);
-    json TOJSON();
-    static constexpr auto getProperties() ;
-        constexpr static auto prop = makePropertiesTuple(Property<Track, int>{&Track::trackId, "id", simpleType::INT}, 
-                               Property<Track, int>{&Track::albumId, "albumId", simpleType::INT}, 
-                               Property<Track, string>{&Track::timestamp, "timestamp", simpleType::STRING});
+    json toJson() const;
+    friend std::ostream& operator<<(std::ostream& os, const Track& tr);
+   
+    
 };
 
 #endif // TRACK_H

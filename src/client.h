@@ -5,7 +5,6 @@
 
 extern const string BASE_API_URL;
 extern const string BASE_OAUTH_URL;
-extern const string TOKEN;
 
 class Client {
 private:

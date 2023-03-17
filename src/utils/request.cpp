@@ -23,7 +23,7 @@ cpr::Header Request::request_headers(const string &token, const string &language
 cpr::Response Request::Get(const cpr::Url &url, const cpr::Header &headers, const cpr::Timeout &timeout) {
     cpr::Response response = cpr::Get(url, headers);
     if (response.status_code < 200 || response.status_code > 299) {
-        throw RequestError("Request Get Error");
+        throw RequestError("Request Get Error: " + response.error.message + "\nStatus Code: " + std::to_string(response.status_code));
     }
     return response;
 }
@@ -32,7 +32,7 @@ cpr::Response Request::Post(const cpr::Url &url, const cpr::Header &headers, con
                             const cpr::Body &body, const cpr::Timeout &timeout) {
     cpr::Response response = cpr::Post(url, body, params, headers);
     if (response.status_code < 200 || response.status_code > 299) {
-        throw RequestError("Request Post Error");
+        throw RequestError("Request Post Error: " + response.error.message+ "\nStatus Code: " + std::to_string(response.status_code));
     }
     return response;
 }

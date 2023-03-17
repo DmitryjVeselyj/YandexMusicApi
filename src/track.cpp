@@ -4,8 +4,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <cpr/parameters.h>
-#include <fstream>
-#include <iostream>
+
 #include <typeinfo>
 
 Track::Track(const Client &client) {
@@ -25,7 +24,7 @@ json Track::getFullInfo() {
 }
 
 json Track::getDownloadInfo() {
-
+    
     cpr::Url url(client.getApiUrl() + "/tracks/" + std::to_string(trackId) + "/download-info");
     cpr::Response response = Request::Get(url, client.getRequest().getHeaders());
     return json::parse(response.text);
@@ -69,13 +68,20 @@ cpr::Url Track::buildDirectLink(cpr::Url downloadInfoUrl) {
     return cpr::Url(directLink);
 }
 constexpr auto Track::getProperties() {
-    return makePropertiesTuple(Property<Track, int>{&Track::trackId, "id", simpleType::INT}, 
-                               Property<Track, int>{&Track::albumId, "albumId", simpleType::INT}, 
-                               Property<Track, string>{&Track::timestamp, "timestamp", simpleType::STRING});
+    return makePropertiesTuple(Property<Track, int>{&Track::trackId, "id"},
+                               Property<Track, int>{&Track::albumId, "albumId"},
+                               Property<Track, string>{&Track::timestamp, "timestamp"});
 }
-json Track::TOJSON(){
-    return toJson(getProperties());
+json Track::toJson() const {
+    return AddJsonSerDer::toJson(getProperties());
 }
-Track::Track(const json &data) {
+Track::Track(const Client &client, const json &data) {
+    this->client = client;
     deJson(data, getProperties());
+}
+
+std::ostream &operator<<(std::ostream &os, const Track &tr) {
+    json val = tr.toJson();
+    os << val;
+    return os;
 }
